@@ -154,16 +154,12 @@ String OBDCANmessage(String CANmessage){ // sends a text string to CAN controlle
     serialOBDCAN.read();
   }
   serialOBDCAN.println(CANmessage);
-  //delay(40); // make sure we wait long enough for the device to respond
-  // it usually takes about 30 milliseconds for the device to be done sending
-  // we wait 40 just to make sure
   while((serialOBDCAN.available()==0)/*&&((millis()-messageStartTime)<500)*/){}
   while(serialOBDCAN.available()>0){
     int inChar = serialOBDCAN.read();
     incoming += (char)inChar;
     while(((serialOBDCAN.available() == 0 )&&(char(inChar)!='>'))/*&&((millis()-messageStartTime)<100)*/){}
   }
-  //delay(5);
   return incoming;
 }
 
