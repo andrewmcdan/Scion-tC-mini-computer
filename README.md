@@ -12,3 +12,8 @@ Tests
 -----
 
 While I work on this project, I will be doing various tests with communication variables, low power modes, and input/output methods. When I write useful test code, I will commit it to the "Tests" folder.
+
+Miscellaneous Stuff
+-------------------
+
+All of the Arduino code is in folder structures that enable me to open the code directly in the Arduino IDE. Sorry if this makes it annoying to navigate the folder tree.
