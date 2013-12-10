@@ -62,7 +62,7 @@ void loop() {
   tierTwoCounter += timeDiff;
   tierThreeCounter += timeDiff;
   tierFourCounter += timeDiff;
-  teirFiveCounter += timeDiff;
+  tierFiveCounter += timeDiff;
   
   if(tierOneCounter>10000){
     tierOneCounter=0;
@@ -113,9 +113,10 @@ void sendPacketUDP(byte *pBuffer,byte pSize,const IPAddress addy){
 void fobStatus(){
   byte pBuffer[1];
   starterUDP.read(pBuffer,1);
-  if(pBuffer[0]==' '){
+  if(pBuffer[0]==0xAA){
     
     // get the fob status
+    pBuffer[0]=0x55;
     
     starterUDP.beginPacket(vehicleStarter,41234);
     starterUDP.write(pBuffer,1);
