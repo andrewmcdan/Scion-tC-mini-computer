@@ -1,3 +1,7 @@
+//  This sketch make use of a modified version of the ethernet library. The modified version
+//  must reside in the Arduino core libraries folders. This sketch has a copy with it for
+//  safe keeping.
+
 #include <SPI.h>
 #include <Ethernet.h>
 #include <EthernetUDP.h>
@@ -32,26 +36,70 @@ void setup() {
   SD.begin(4);  
 }
 
-void loop() {
-  byte MilesPerHour = 0, EngineTemp = 0, TransTemp = 0, ECUvoltage = 0;
-  short engineRPM = 0, AirFuelRatio = 0, FuelRate = 0;
-  const byte MAX_PACKET_SIZE = 12;
-  byte packetBuffer[MAX_PACKET_SIZE];  // max size of packet. 
-  
-  //MilesPerHour = VehicleSpeed();
-  //engineRPM = EngineRPM();
-  //EngineTemp = EngineTemp();
-  //TransTemp = TransTemp();
-  //fakeECUinfo(&MilesPerHour,&EngineTemp,&TransTemp,&ECUvoltage,&engineRPM,&AirFuelRatio,&FuelRate);  
-  
-  short rand = random(65535);
-  //short rand = time2 - time1;
-  packetBuffer={EngineTemp,MilesPerHour,(engineRPM>>8),engineRPM,ECUvoltage,TransTemp,((byte)(rand>>8)),(byte)rand,0,0,0,0};
 
-  sendPacketUDP(packetBuffer,MAX_PACKET_SIZE,infoServer);
-  if(starterUDP.parsePacket()){fobStatus();}
-  CheckAndDoWebServer();
-  delay(de_lay);
+unsigned long tierOneCounter = 0;
+unsigned long tierTwoCounter = 0;
+unsigned long tierThreeCounter = 0;
+unsigned long tierFourCounter = 0;
+unsigned long tierFiveCounter = 0;
+unsigned short timeDiff;
+unsigned long timer = micros();
+//unsigned long timer2 = millis();
+
+void loop() {
+  //  timing teirs:    tierOneCounter - 10ms
+  //                   tierTwoCounter - 40ms
+  //                   tierThreeCounter - 75ms
+  //                   tierFourCounter - 250ms
+  //                   tierFiveCounter - 700ms
+  if(micros()<timer){
+    timer=micros();
+  }
+  timeDiff = micros()-timer;
+  timer=micros();
+  //serialDebug.println(timeDiff);
+  tierOneCounter += timeDiff;
+  tierTwoCounter += timeDiff;
+  tierThreeCounter += timeDiff;
+  tierFourCounter += timeDiff;
+  teirFiveCounter += timeDiff;
+  
+  if(tierOneCounter>10000){
+    tierOneCounter=0;
+    // do teir one tasks
+  }
+  if(tierTwoCounter>40000){
+    tierTwoCounter=0;
+    // do teir two tasks
+  }
+  if(tierThreeCounter>75000){
+    tierThreeCounter=0;
+    // do teir three tasks
+    byte MilesPerHour = 0, EngineTemp = 0, TransTemp = 0, ECUvoltage = 0;
+    short engineRPM = 0, AirFuelRatio = 0, FuelRate = 0;
+    const byte MAX_PACKET_SIZE = 12;
+    byte packetBuffer[MAX_PACKET_SIZE];  // max size of packet. 
+    //MilesPerHour = VehicleSpeed();
+    //engineRPM = EngineRPM();
+    //EngineTemp = EngineTemp();
+    //TransTemp = TransTemp();
+    //fakeECUinfo(&MilesPerHour,&EngineTemp,&TransTemp,&ECUvoltage,&engineRPM,&AirFuelRatio,&FuelRate);  
+    short rand = random(65535);
+    //short rand = time2 - time1;
+    packetBuffer={EngineTemp,MilesPerHour,(engineRPM>>8),engineRPM,ECUvoltage,TransTemp,((byte)(rand>>8)),(byte)rand,0,0,0,0};
+    sendPacketUDP(packetBuffer,MAX_PACKET_SIZE,infoServer);
+  }
+  if(tierFourCounter>250000){
+    tierFourCounter=0;
+    // do teir four tasks
+    CheckAndDoWebServer();
+  }
+  if(tierFiveCounter>700000){
+    tierFiveCounter=0;
+    // do teir five tasks
+    if(starterUDP.parsePacket()){fobStatus();}
+  }
+  //delay(de_lay);
 }
 
 void sendPacketUDP(byte *pBuffer,byte pSize,const IPAddress addy){
