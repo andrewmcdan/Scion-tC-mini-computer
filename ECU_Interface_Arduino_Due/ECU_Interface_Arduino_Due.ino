@@ -16,6 +16,17 @@ const IPAddress infoServer(192,168,1,61);
 const IPAddress vehicleStarter(192,168,4,4);
 const IPAddress HP12VGcontroller(192,168,4,5);
 const IPAddress testTest(192,168,1,200);
+unsigned long tierOneCounter = 0;
+unsigned long tierTwoCounter = 0;
+unsigned long tierThreeCounter = 0;
+unsigned long tierFourCounter = 0;
+unsigned long tierFiveCounter = 0;
+unsigned short timeDiff;
+unsigned long timer = micros();
+//unsigned long timer2 = millis();
+
+short maxMPH = 0;
+
 
 File daFile;
 EthernetUDP updatesUDP;  // A UDP instance for regular updates to other controllers
@@ -37,14 +48,7 @@ void setup() {
 }
 
 
-unsigned long tierOneCounter = 0;
-unsigned long tierTwoCounter = 0;
-unsigned long tierThreeCounter = 0;
-unsigned long tierFourCounter = 0;
-unsigned long tierFiveCounter = 0;
-unsigned short timeDiff;
-unsigned long timer = micros();
-//unsigned long timer2 = millis();
+
 
 void loop() {
   //  timing teirs:    tierOneCounter - 10ms
