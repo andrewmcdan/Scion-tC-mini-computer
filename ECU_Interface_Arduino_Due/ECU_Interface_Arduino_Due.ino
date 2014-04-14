@@ -15,6 +15,7 @@ const unsigned int localPort = 41231;      // local port to listen for UDP packe
 const IPAddress infoServer(192,168,1,61);
 const IPAddress vehicleStarter(192,168,4,4);
 const IPAddress HP12VGcontroller(192,168,4,5);
+const IPAddress LP5VGcontroller(192,168,4,6);
 const IPAddress testTest(192,168,1,200);
 unsigned long tierOneCounter = 0;
 unsigned long tierTwoCounter = 0;
@@ -23,10 +24,7 @@ unsigned long tierFourCounter = 0;
 unsigned long tierFiveCounter = 0;
 unsigned short timeDiff;
 unsigned long timer = micros();
-//unsigned long timer2 = millis();
-
 short maxMPH = 0;
-
 
 File daFile;
 EthernetUDP updatesUDP;  // A UDP instance for regular updates to other controllers
@@ -35,7 +33,9 @@ EthernetServer webServer(80);
 
 void setup() {
   //serialDebug.begin(115200);
-  //STN1110Setup();
+  if(!STN1110Setup()){
+    // do error thing
+  }
   byte mac[] = { 0xB8, 0x27, 0xEB, 0x22, 0x33, 0x00 };
   byte ip[] = {192,168,4,3};
   byte dns1[] = {8,8,8,8};
@@ -46,9 +46,6 @@ void setup() {
   starterUDP.begin(41230);
   SD.begin(4);  
 }
-
-
-
 
 void loop() {
   //  timing teirs:    tierOneCounter - 10ms
@@ -84,6 +81,7 @@ void loop() {
     const byte MAX_PACKET_SIZE = 12;
     byte packetBuffer[MAX_PACKET_SIZE];  // max size of packet. 
     //MilesPerHour = VehicleSpeed();
+    if(MilesPerHour>maxMPH){maxMPH=MilesPerHour;}
     //engineRPM = EngineRPM();
     //EngineTemp = EngineTemp();
     //TransTemp = TransTemp();

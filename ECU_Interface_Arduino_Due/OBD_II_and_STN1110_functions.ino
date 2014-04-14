@@ -1,4 +1,4 @@
-void STN1110Setup(){
+bool STN1110Setup(){
   delay(3000);
   serialOBDCAN.begin(460800);
   delay(10);
@@ -20,7 +20,11 @@ void STN1110Setup(){
   while(serialOBDCAN.available()>0){
     char inChar = serialOBDCAN.read();
     //serialDebug.write(inChar);
-    while(((serialOBDCAN.available() == 0 )&&(char(inChar)!='>'))/*&&((millis()-timeoutStartTime)<100)*/){}
+    while(((serialOBDCAN.available() == 0 )&&(char(inChar)!='>'))&&((millis()-timeoutStartTime)<100)){
+      if(inChar!='>'){
+        return false;
+      }
+    }
   }
   serialOBDCAN.println("ate0");
   delay(1);
@@ -30,7 +34,11 @@ void STN1110Setup(){
     //delayMicroseconds(25);
     int inChar = serialOBDCAN.read();
     inString += (char)inChar;
-    while(((serialOBDCAN.available() == 0 )&&(char(inChar)!='>'))/*&&((millis()-timeoutStartTime)<100)*/){}
+    while(((serialOBDCAN.available() == 0 )&&(char(inChar)!='>'))&&((millis()-timeoutStartTime)<100)){
+      if(inChar!='>'){
+        return false;
+      }
+    }
   }
   String testString = "OK";
   testString += (char)0x0d;
@@ -39,6 +47,7 @@ void STN1110Setup(){
   if(inString != testString){
     delay(1);
   }
+  return true;
 }
 
 short EngineTemp(){

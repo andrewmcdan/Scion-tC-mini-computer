@@ -89,6 +89,7 @@ void CheckAndDoWebServer(){
           client.print(F("Content-Type: "));
           client.println(contentType);
           client.println(F("Connection: close"));
+          client.println(F("X-Dinosaur-Says: RAWR"));
           client.println();
           httpRequestFile.close();
           if((fileEXT[0]=='A')&&(fileEXT[1]=='S')&&(fileEXT[2]=='L')){
@@ -146,3 +147,5 @@ void CheckAndDoWebServer(){
     daFile.close();
   }
 }
+
+
