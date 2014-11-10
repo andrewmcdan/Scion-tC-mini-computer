@@ -10,6 +10,7 @@
 #define de_lay 100
 #define serialOBDCAN Serial2
 #define serialDebug Serial
+//#define MAX_PACKET_SIZE 12
 
 const unsigned int localPort = 41231;      // local port to listen for UDP packets
 const IPAddress infoServer(192,168,1,61);
@@ -79,7 +80,7 @@ void loop() {
     byte MilesPerHour = 0, EngineTemp = 0, TransTemp = 0, ECUvoltage = 0;
     short engineRPM = 0, AirFuelRatio = 0, FuelRate = 0;
     const byte MAX_PACKET_SIZE = 12;
-    byte packetBuffer[MAX_PACKET_SIZE];  // max size of packet. 
+    //byte packetBuffer[MAX_PACKET_SIZE];  // max size of packet. 
     //MilesPerHour = VehicleSpeed();
     if(MilesPerHour>maxMPH){maxMPH=MilesPerHour;}
     //engineRPM = EngineRPM();
@@ -88,7 +89,7 @@ void loop() {
     //fakeECUinfo(&MilesPerHour,&EngineTemp,&TransTemp,&ECUvoltage,&engineRPM,&AirFuelRatio,&FuelRate);  
     short rand = random(65535);
     //short rand = time2 - time1;
-    packetBuffer={EngineTemp,MilesPerHour,(engineRPM>>8),engineRPM,ECUvoltage,TransTemp,((byte)(rand>>8)),(byte)rand,0,0,0,0};
+    byte packetBuffer[MAX_PACKET_SIZE]={EngineTemp,MilesPerHour,(engineRPM>>8),engineRPM,ECUvoltage,TransTemp,((byte)(rand>>8)),(byte)rand,0,0,0,0};
     sendPacketUDP(packetBuffer,MAX_PACKET_SIZE,infoServer);
   }
   if(tierFourCounter>250000){

@@ -3,10 +3,10 @@
 struct animation {
   byte FR;
   byte numFrames;
-  unsigned int F[9];
+  unsigned int F[100];
 };
 
-animation KitKit = {
+animation TurnSigScroll = {
  /* FrameRate         */ 5,
  /* Number of frames  */ 9,
  /* Frame 1           */{((B00000000)+(long(B00000000)<<8)),
@@ -18,12 +18,71 @@ animation KitKit = {
  /* Frame 7           */ ((B00100000)+(long(B00000100)<<8)),
  /* Frame 8           */ ((B01000000)+(long(B00000010)<<8)),
  /* Frame 9           */ ((B10000000)+(long(B00000001)<<8))  }};
+ 
+animation TurnSigRight = {
+ /* FrameRate         */ 5,
+ /* Number of frames  */ 9,
+ /* Frame 1           */{((B00000000)+(long(B00000000)<<8)),
+ /* Frame 2           */ ((B00000000)+(long(B10000000)<<8)),
+ /* Frame 3           */ ((B00000000)+(long(B01000000)<<8)),
+ /* Frame 4           */ ((B00000000)+(long(B00100000)<<8)),
+ /* Frame 5           */ ((B00000000)+(long(B00010000)<<8)),
+ /* Frame 6           */ ((B00000000)+(long(B00001000)<<8)),
+ /* Frame 7           */ ((B00000000)+(long(B00000100)<<8)),
+ /* Frame 8           */ ((B00000000)+(long(B00000010)<<8)),
+ /* Frame 9           */ ((B00000000)+(long(B00000001)<<8))  }};
+ 
+animation TurnSigLeft = {
+ /* FrameRate         */ 5,
+ /* Number of frames  */ 9,
+ /* Frame 1           */{((B00000000)+(long(B00000000)<<8)),
+ /* Frame 2           */ ((B00000001)+(long(B00000000)<<8)),
+ /* Frame 3           */ ((B00000010)+(long(B00000000)<<8)),
+ /* Frame 4           */ ((B00000100)+(long(B00000000)<<8)),
+ /* Frame 5           */ ((B00001000)+(long(B00000000)<<8)),
+ /* Frame 6           */ ((B00010000)+(long(B00000000)<<8)),
+ /* Frame 7           */ ((B00100000)+(long(B00000000)<<8)),
+ /* Frame 8           */ ((B01000000)+(long(B00000000)<<8)),
+ /* Frame 9           */ ((B10000000)+(long(B00000000)<<8))  }}; 
+ 
+ animation demoAnim = {
+   5,29,{
+ /* Frame 1           */ ((B00000000)+(long(B00000000)<<8)),
+ /* Frame 2           */ ((B00000001)+(long(B00000000)<<8)),
+ /* Frame 3           */ ((B00000010)+(long(B00000000)<<8)),
+ /* Frame 4           */ ((B00000100)+(long(B00000000)<<8)),
+ /* Frame 5           */ ((B00001000)+(long(B00000000)<<8)),
+ /* Frame 6           */ ((B00010000)+(long(B00000000)<<8)),
+ /* Frame 7           */ ((B00100000)+(long(B00000000)<<8)),
+ /* Frame 8           */ ((B01000000)+(long(B00000000)<<8)),
+ /* Frame 9           */ ((B10000000)+(long(B00000000)<<8)),
+ /* Frame 10          */ ((B00000000)+(long(B10000000)<<8)),
+ /* Frame 11          */ ((B00000000)+(long(B01000000)<<8)),
+ /* Frame 12          */ ((B00000000)+(long(B00100000)<<8)),
+ /* Frame 13          */ ((B00000000)+(long(B00010000)<<8)),
+ /* Frame 14          */ ((B00000000)+(long(B00001000)<<8)),
+ /* Frame 15          */ ((B00000000)+(long(B00000100)<<8)),
+ /* Frame 16          */ ((B00000000)+(long(B00000010)<<8)),
+ /* Frame 17          */ ((B00000000)+(long(B00000001)<<8)),
+ /* Frame 18          */ ((B10000000)+(long(B00000001)<<8)),
+ /* Frame 19          */ ((B01000000)+(long(B00000010)<<8)),
+ /* Frame 20          */ ((B00100000)+(long(B00000100)<<8)),
+ /* Frame 21          */ ((B10010000)+(long(B00001001)<<8)),
+ /* Frame 22          */ ((B01001000)+(long(B00010010)<<8)),
+ /* Frame 23          */ ((B00100100)+(long(B00100100)<<8)),
+ /* Frame 24          */ ((B00010010)+(long(B01001000)<<8)),
+ /* Frame 25          */ ((B00001001)+(long(B10010000)<<8)),
+ /* Frame 26          */ ((B00000100)+(long(B00100000)<<8)),
+ /* Frame 27          */ ((B00000010)+(long(B01000000)<<8)),
+ /* Frame 28          */ ((B00000001)+(long(B10000000)<<8)),
+ /* Frame 29          */ ((B00000000)+(long(B00000000)<<8)), }};
+ 
 
 #define LATCHPIN 8
 #define leftTurnInput 2
 #define rightTurnInput 3
 #define StripEnable 7
-long THECOLOR 0xffff00
+long THECOLOR = 0xffff00;
 int de_lay = 100;
 int blinkTimeOut = 1500;
 byte blinkerMode = 1;

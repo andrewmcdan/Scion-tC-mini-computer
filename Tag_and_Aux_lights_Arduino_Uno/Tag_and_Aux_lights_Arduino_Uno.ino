@@ -9,8 +9,8 @@ byte gateway[] = {192,168,1,77};
 byte subnet[] = {255,255,248,0};
 unsigned int localPort = 41230;
 IPAddress infoServer(192,168,1,61);
-const int NTP_PACKET_SIZE= 8;
-byte packetBuffer[ NTP_PACKET_SIZE];
+const int UDP_PACKET_SIZE= 8;
+byte packetBuffer[ UDP_PACKET_SIZE];
 
 EthernetUDP Udp;
 
@@ -22,22 +22,22 @@ void setup()
 
 void loop()
 {
-  sendNTPpacket(infoServer);
+  sendUDPpacket(infoServer);
   delay(100); 
 }
 
-unsigned long sendNTPpacket(IPAddress& address){
-  memset(packetBuffer, 0, NTP_PACKET_SIZE);
+unsigned long sendUDPpacket(IPAddress& address){
+  memset(packetBuffer, 0, UDP_PACKET_SIZE);
   packetBuffer[0] = random(255);
   packetBuffer[1] = random(255);
   packetBuffer[2] = random(255);
   packetBuffer[3] = 0xEC;
-  packetBuffer[4]  = 49;
-  packetBuffer[5]  = 0x4E;
-  packetBuffer[6]  = 49;
-  packetBuffer[7]  = 52;
+  packetBuffer[4] = 49;
+  packetBuffer[5] = 0x4E;
+  packetBuffer[6] = 49;
+  packetBuffer[7] = 52;
 
   Udp.beginPacket(address, 41235);
-  Udp.write(packetBuffer,NTP_PACKET_SIZE);
+  Udp.write(packetBuffer,UDP_PACKET_SIZE);
   Udp.endPacket(); 
 }
