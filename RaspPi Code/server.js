@@ -1,4 +1,5 @@
-var app = require('express').createServer(), io = require('socket.io').listen(app,{log:false});
+var app = require('express').createServer();
+var io = require('socket.io').listen(app,{log:false});
 
 io.set('browser client minification', true);  // send minified client
 io.set('browser client etag', true);          // apply etag caching logic based on version number
@@ -14,7 +15,7 @@ app.get('/startTheScion/', function () {console.log('got request for start the c
 var current_Heat_and_AC_data = '';
 var current_OBD_Blinker_Door_TrunkLid_Temp_Data = '';
 
-// Setup socket.io, listening for socket.io connections for each currentData buffer
+// Setup socket.io, listening for socket.io connections for each current Data buffer. Each data buffer gets its own namespace.
 var OBD = io.of('/DUEdata'); // 
 /*OBD.on('connection', function () {
     OBD.emit('message',current_OBD_Blinker_Door_TrunkLid_Temp_Data);
