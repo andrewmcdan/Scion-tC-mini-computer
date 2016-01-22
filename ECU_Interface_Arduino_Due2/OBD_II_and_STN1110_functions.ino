@@ -84,11 +84,9 @@ return yy*0.621371;
 }*/
 
 void UpdateVehicleSpeed(String textRes) {
-    char s[16];
-    textRes.toCharArray(s,16);
-    short yy;
-    sscanf(s, "%*4x%2x", &yy);
-    MilesPerHour = yy*0.621371;
+    char s[3];
+    textRes.substring(4,6).toCharArray(s,3);
+    MilesPerHour = ((short)strtol(s,NULL,16))*0.621371;
     if(MilesPerHourTemp!=MilesPerHour){
         bitSet(dataToSendi2cFlag,MPHflagMask);
         MilesPerHourTemp=MilesPerHour;
@@ -96,13 +94,9 @@ void UpdateVehicleSpeed(String textRes) {
 }
 
 void UpdateTach(String textRes) {
-    char s[18];
-    textRes.toCharArray(s,18);
-    short xx;
-    short yy;
-    sscanf(s, "%*4x%2x%2x", &yy, &xx);
-    engineRPM = ((yy*256)+xx)/4;
-    //engineRPM = 9834;
+    char s[5];
+    textRes.substring(4,8).toCharArray(s,5);
+    engineRPM = ((short)strtol(s,NULL,16))/4;
     if(engineRPMtemp != engineRPM){
         bitSet(dataToSendi2cFlag,RPMflagMask);
         engineRPMtemp=engineRPM;
