@@ -1,0 +1,16 @@
+#define serialOBDCAN Serial1
+#define serialDebug Serial2
+#define DueInt 41
+#define DueRTS 42
+#define RasPitoDueDataReq 43
+#define AirTempServo 2
+#define AirTempPot A0
+#define AirDestServo 5
+#define AirDestPot A2
+#define SubVolServo 3
+#define SubVolPot A1
+#define MCP23017Int 40
+#define MPHflagMask 0
+#define RPMflagMask 1
+#define AirDestFlagMask 2
+#define AirTempFlagMask 3
