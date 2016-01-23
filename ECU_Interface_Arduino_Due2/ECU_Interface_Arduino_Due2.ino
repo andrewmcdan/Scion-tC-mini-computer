@@ -40,7 +40,6 @@ void setup() {
     analogWrite(DAC0, 4095);
     analogWrite(DAC1, 0);
     digitalWrite(DueInt, HIGH); // sends the default "xxxxxxxx" to the raspi to signal that a reset has occurred
-    //serialDebug.begin(115200);
     if(!STN1110Setup()){
         // do error thing
     }
@@ -55,15 +54,8 @@ void loop() {
     //                   tierThreeCounter - 75ms
     //                   tierFourCounter - 1s
     //                   tierFiveCounter - 2.5s
-    /*if(micros()<timer){
-    //timeDiff = 4294967295-timer+micros();
-    //}else{
-    timeDiff = micros()-timer+5;
-    //}
-    */
     timeDiff = micros()<timer?4294967295-timer+micros():micros()-timer+5;
     timer=micros();
-    //serialDebug.println(timeDiff);
     tierOneCounter += timeDiff;
     tierTwoCounter += timeDiff;
     tierThreeCounter += timeDiff;
@@ -111,56 +103,14 @@ void loop() {
     if(tierThreeCounter>100000){
         tierThreeCounter=0;
         // do teir three tasks
-        //dataToSendi2cFlag = 0;
-        //long temp = VehicleSpeed();
-        /*if(temp!=MilesPerHour){
-        MilesPerHour = temp;
-        // set flag for need of data being sent to raspi
-        bitSet(dataToSendi2cFlag,MPHflagMask);
-        //dataToSendi2cFlag = dataToSendi2cFlag | MPHflagMask;
-        //}*/
-
         if(OBDMessagesToSendCount<3){
             AsyncOBDCANmessageAddMessageToSend("010d",0); // Speed   -  123489
             AsyncOBDCANmessageAddMessageToSend("010c",1); // Tach    -  12342700
         }
-
-        //while(digitalRead(DueInt)){digitalWrite(44, !digitalRead(44));}
-        /*temp = EngineRPM();
-        if(temp!=engineRPM){
-        engineRPM = temp;
-        // set flag for need of data being sent to raspi
-        bitSet(dataToSendi2cFlag,RPMflagMask);
-        //dataToSendi2cFlag = dataToSendi2cFlag | RPMflagMask;
-        //}*/
-        //if(MilesPerHour>maxMPH){maxMPH=MilesPerHour;}
-        //EngineTemp = EngineTemp();
-        //TransTemp = TransTemp();
-        //fakeECUinfo(&MilesPerHour,&EngineTemp1,&TransTemp1,&engineRPM);
-        //short rand = random(65535);
     }
     if(tierFourCounter>1000000){
         tierFourCounter=0;
         // do teir four tasks
-        /*serialDebug.println(temperature);
-        serialDebug.println(airDestination);
-        serialDebug.println(fanSpeed);
-        serialDebug.println(colorRGBr);
-        serialDebug.println(colorRGBg);
-        serialDebug.println(colorRGBb);
-        serialDebug.println(masterVolume);
-        serialDebug.println(subVolume);
-        serialDebug.println(AudioSource);
-        serialDebug.println(reCirc?"true":"false");
-        serialDebug.println(AC?"true":"false");
-        serialDebug.println(rearDef?"true":"false");
-        serialDebug.println(fogLights?"true":"false");
-        serialDebug.println(groundLights?"true":"false");
-        serialDebug.println(groundBlinkers?"true":"false");
-        serialDebug.println(grill?"true":"false");
-        serialDebug.println(halos?"true":"false");
-        serialDebug.println(VSC?"true":"false");
-        serialDebug.println(trac?"true":"false");*/
         serialDebug.println(MilesPerHour);
         serialDebug.println(engineRPM);
         serialDebug.println(" ");
@@ -168,6 +118,5 @@ void loop() {
     if(tierFiveCounter>2500000){
         tierFiveCounter=0;
         // do teir five tasks
-        //digitalWrite(41, !digitalRead(41));
     }
 }
