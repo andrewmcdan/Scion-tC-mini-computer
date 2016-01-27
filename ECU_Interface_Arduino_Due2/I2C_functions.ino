@@ -1,3 +1,9 @@
+void I2Csetup(){
+    Wire1.begin(2);
+    Wire1.onRequest(requestEvent);
+    Wire1.onReceive(receiveEvent);
+}
+
 void addDataToRasPi(){
     char tempchar[9] = "x";
     String temp = "";

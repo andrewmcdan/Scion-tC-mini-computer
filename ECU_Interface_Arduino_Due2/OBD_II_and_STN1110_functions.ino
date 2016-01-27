@@ -3,7 +3,7 @@ GenFunct OBDResponseParser [] = {UpdateVehicleSpeed,UpdateTach};
 
 bool STN1110Setup(){
     delay(3000);
-    serialOBDCAN.begin(460800);
+    serialOBDCAN.begin(1500000); // 460800
     delay(10);
     serialOBDCAN.println(' ');
     delay(1);
@@ -76,6 +76,7 @@ void UpdateVehicleSpeed(String textRes) {
     char s[3];
     textRes.substring(4,6).toCharArray(s,3);
     MilesPerHour = ((short)strtol(s,NULL,16))*0.621371;
+    MilesPerHour = random(99);
     if(MilesPerHourTemp!=MilesPerHour){
         bitSet(dataToSendi2cFlag,MPHflagMask);
         MilesPerHourTemp=MilesPerHour;
@@ -85,7 +86,8 @@ void UpdateVehicleSpeed(String textRes) {
 void UpdateTach(String textRes) {
     char s[5];
     textRes.substring(4,8).toCharArray(s,5);
-    engineRPM = ((short)strtol(s,NULL,16))/4;
+    engineRPM = ((long)strtol(s,NULL,16))/4;
+    engineRPM = random(9999);
     if(engineRPMtemp != engineRPM){
         bitSet(dataToSendi2cFlag,RPMflagMask);
         engineRPMtemp=engineRPM;
@@ -109,11 +111,14 @@ void AsyncOBDCANmessageSendMessage(){
 
 void AsyncOBDCANmessageRecieved(){
     String incoming = "";
-    while(serialOBDCAN.available()>0){
-        int inChar = serialOBDCAN.read();
-        incoming += (char)inChar;
-        while(((serialOBDCAN.available() == 0 )&&(char(inChar)!='>'))){}
-    }
+    //  test  //////////////////////////////////////////////////////////////////////////////////////////
+    //while(serialOBDCAN.available()>0){                                    // commented out for testing
+    //int inChar = serialOBDCAN.read();                                     // commented out for testing
+    //incoming += (char)inChar;                                             // commented out for testing
+    //while(((serialOBDCAN.available() == 0 )&&(char(inChar)!='>'))){}      // commented out for testing
+    //}                                                                     // commented out for testing
+    //  test  //////////////////////////////////////////////////////////////////////////////////////////
+
     OBDResponseParser [OBDResponseCallbackIndex[0]] (incoming);
     for(int i=0;i<4;i++){
         OBDResponseCallbackIndex[i]=OBDResponseCallbackIndex[i+1];

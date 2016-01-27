@@ -13,7 +13,7 @@ char dataToSendi2cBuff[9] = "xxxxxxxx";
 byte fanSpeed = 0, temperature = 0, airDestination = 0, colorRGBr = 0, colorRGBg = 0, colorRGBb = 0, MilesPerHour = 0, MilesPerHourTemp = 0, EngineTemp1 = 0, TransTemp1 = 0, VehVolts = 0, v12volts = 0, v5volts = 0, v33volts = 0, vBattvolts = 0, masterVolume = 0, subVolume = 0, AudioSource=0;
 byte dataToSendi2cFlag = 0;
 bool RasPiDataReq=false,reCirc=false,AC=false,rearDef=false,fogLights=false,groundLights=false,groundBlinkers=false,grill=false,halos=false,VSC=false,trac=false,AirBagOnIndc8or=false,AirBagOffIndc8or=false,securityIndc8tor=false;
-short engineRPM = 0, engineRPMtemp = 0;
+long engineRPM = 0, engineRPMtemp = 0;
 char* OBDMessagesToSend[] = {"    ","    ","    ","    ","    "};
 byte OBDMessagesToSendCount = 0;
 bool waitingForOBDResponse = false;
@@ -21,29 +21,12 @@ int OBDResponseCallbackIndex[] = {0,0,0,0,0};
 
 
 void setup() {
-    Wire1.begin(2);
-    Wire1.onRequest(requestEvent);
-    Wire1.onReceive(receiveEvent);
+    I2Csetup();
+    PinsSetup();
     serialDebug.begin(115200);
-    pinMode(DueInt, INPUT);
-    pinMode(DueInt, OUTPUT);
-    digitalWrite(DueInt, LOW);
-    pinMode(DueRTS, INPUT);
-    pinMode(DueRTS, OUTPUT);
-    digitalWrite(DueRTS, HIGH);
-    pinMode(44, INPUT);
-    pinMode(44, OUTPUT);
-    digitalWrite(44, HIGH);
-    pinMode(RasPitoDueDataReq, INPUT);
-    analogWriteResolution(12);
-    analogReadResolution(12);
-    analogWrite(DAC0, 4095);
-    analogWrite(DAC1, 0);
-    digitalWrite(DueInt, HIGH); // sends the default "xxxxxxxx" to the raspi to signal that a reset has occurred
     if(!STN1110Setup()){
         // do error thing
     }
-
     dataToSendi2cFlag = 0;
 }
 
