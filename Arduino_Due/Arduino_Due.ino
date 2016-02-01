@@ -5,9 +5,7 @@
 #include <Wire.h>
 extern TwoWire Wire1;
 
-Servo AirTempServo;
-Servo AirDestServo;
-Servo SubVolServo;
+Servo AirTempServo,AirDestServo,SubVolServo;
 
 MCP_CAN CustomCAN0(9);  //  see end of file for message id info
 
@@ -26,28 +24,13 @@ void setup() {
 
     I2Csetup();
     PinsSetup();
+    CustomCANbusSetup();
+    ServoSetup();
+    SerialSetup();
+
     for(int i=22;i<=35;i++){
         digitalRead(i)?bitSet(digitalInputs,i-22):bitClear(digitalInputs,i-22);
     }
-
-    serialDebug.begin(2000000);
-    serialLeonardo.begin(115200);
-    serialTeensy.begin(2000000);
-    if(!STN1110Setup()){
-        // do error thing
-    }
-
-    dataToSendi2cFlag = 0;
-
-    AirTempServo.attach(AirTempServoPin);
-    AirDestServo.attach(AirDestServoPin);
-    SubVolServo.attach(SubVolServoPin);
-    AirTempServo.write(90);
-    AirDestServo.write(90);
-    SubVolServo.write(90);
-
-    //if(CustomCAN0.begin(CAN_1000KBPS) == CAN_OK) serialDebug.print("can init ok!!\r\n");
-    CustomCAN0.begin(CAN_1000KBPS);
 }
 
 void loop() {
@@ -60,6 +43,10 @@ void loop() {
     }
     if(waitingForOBDResponse && serialOBDCAN.available()){
         AsyncOBDCANmessageRecieved();
+    }
+
+    if(serialTeensy.available()){
+        ReceiveTeensySerial();
     }
 
 
@@ -102,24 +89,28 @@ void loop() {
         for(int i=22;i<=35;i++){
             digitalRead(i)?bitSet(digitalInputs,i-22):bitClear(digitalInputs,i-22);
         }
+
+
+        ///////////////////////
+        //CustomCAN0.sendMsgBuf(rxID, 0, 1, rxBuf);
+        /////////////////////////
     }
     if(tierTwoCounter>20000){
         tierTwoCounter=0;
         //////  do teir two tasks  //////
         /////////////////// update hardware from variables ////////////////////////////////////////////////////////////
         // Update servo positions for airTemp and airDest
-        AirTempServo.write((map(analogRead(AirTempPotPin),0,4095,0,255)-temperature)+90);
-        AirDestServo.write((map(analogRead(AirDestPotPin),0,4095,0,255)-airDestination)+90);
+        AirTempServo.write(constrain((((map(analogRead(AirTempPotPin),0,4095,0,255)-temperature)*1.8)+90),0,180));
+        //AirTempServo.write(90);
+        AirDestServo.write(constrain((((map(analogRead(AirDestPotPin),0,4095,0,255)-airDestination)*4)+90),0,180));
         SubVolServo.write(180);
 
         // send update to Teensy for all outputs
+        SendMessageToTeensy(TeensyMessageID_BlinkerState,blinkerState++);
 
         // Update DAC's for voume controls
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-
-        serialLeonardo.println("this is message");
     }
     if(tierThreeCounter>100000){
         tierThreeCounter=0;
@@ -129,6 +120,8 @@ void loop() {
             AsyncOBDCANmessageAddMessageToSend("010c",1); // Tach    -  12342700
         }
 
+
+
         /////  testing //////////////////
         rxBuf[0] = pattern;
         rxID = rxID==0x5ff?0x500:rxID+1;
@@ -137,8 +130,7 @@ void loop() {
             newPattern = false;
         }
 
-        serialTeensy.println("tesfghfghfghfght");
-        /////  testing //////////////////
+
     }
     if(tierFourCounter>500000){
         tierFourCounter=0;
@@ -154,8 +146,9 @@ void loop() {
         //////  do teir five tasks  //////
         i2cresetCounter += digitalRead(DueInt)?1:0;
         if(i2cresetCounter>5){digitalWrite(DueInt, LOW);}
-
+        /////  testing //////////////////
         sendManyVariablesSerialDebug();
+        /////  testing //////////////////
     }
 }
 
@@ -172,8 +165,8 @@ Filter ID   range   Purpose
 0x020   ->  0x02F   Color group 1
 0x030   ->  0x03F   Color group 2
 0x040   ->  0x04F   Color group 3
-  |           |         |
-  V           V         V
+|           |         |
+V           V         V
 0x2F0   ->  0x2FF   Color group 46
 
 0x300   ->  0x6FF   Not currently Used

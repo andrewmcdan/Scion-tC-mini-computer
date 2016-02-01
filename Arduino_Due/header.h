@@ -1,6 +1,5 @@
-#define serialOBDCAN Serial1
 #define serialDebug Serial
-#define serialLeonardo Serial3
+#define serialOBDCAN Serial1
 #define serialTeensy Serial2
 #define DueInt 41
 #define DueRTS 42
@@ -18,6 +17,11 @@
 #define AirTempFlagMask 3
 #define CustomCAN0CSPin 9
 #define CustomCAN0IntPin 8
+
+const char TeensyMessageID_BlinkerState = 'a';
+const char TeensyMessageID_USBswitchState = 'b';
+const char TeensyMessageID_AudioSwitchState = 'c';
+const char TeensyMessageID_MesForProMicro = 'd';
 
 unsigned long
 tierOneCounter = 0,
@@ -69,7 +73,8 @@ subVolume = 0,
 AudioSource=0,
 dataToSendi2cFlag = 0,
 OBDMessagesToSendCount = 0,
-pattern = 0;
+pattern = 0,
+blinkerState = 0;
 
 bool
 RasPiDataReq=false,
