@@ -12,12 +12,7 @@ byte
 addr_MSTR_L = B0111100,
 addr_MSTR_R = B0111110,
 addr_SUBW_L = B0111101,
-addr_SUBW_R = B0111111,
-MSTR_VOL_L = 0x00,
-MSTR_VOL_R = 0x00,
-SUBW_VOL_L = 0x00,
-SUBW_VOL_R = 0x00; // volume range of 0x00 to 0x7f (0 to 127)
-bool newData = true;
+addr_SUBW_R = B0111111;
 
 void setup() {
   Wire.begin();
@@ -39,33 +34,22 @@ void loop() {
 
   if (!digitalRead(8)) {
     CAN0.readMsgBuf(&len, rxBuf);
-    MSTR_VOL_L = rxBuf[0];
-    MSTR_VOL_R = rxBuf[1];
-    SUBW_VOL_L = rxBuf[2];
-    SUBW_VOL_R = rxBuf[3];
-    newData = true;
-  }
-
-  //  check if new flag is set
-  //  if new==true, send vols to i2c pots
-  if (newData) {
     Wire.beginTransmission(addr_MSTR_L);
     Wire.write(0x00);
-    Wire.write(MSTR_VOL_L);
+    Wire.write(rxBuf[0]);
     Wire.endTransmission();
     Wire.beginTransmission(addr_MSTR_R);
     Wire.write(0x00);
-    Wire.write(MSTR_VOL_R);
+    Wire.write(rxBuf[1]);
     Wire.endTransmission();
     Wire.beginTransmission(addr_SUBW_L);
     Wire.write(0x00);
-    Wire.write(SUBW_VOL_L);
+    Wire.write(rxBuf[2]);
     Wire.endTransmission();
     Wire.beginTransmission(addr_SUBW_R);
     Wire.write(0x00);
-    Wire.write(SUBW_VOL_R);
+    Wire.write(rxBuf[3]);
     Wire.endTransmission();
-    newData = false;
   }
 }
 
