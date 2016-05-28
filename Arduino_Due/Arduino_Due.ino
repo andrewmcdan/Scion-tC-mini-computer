@@ -108,7 +108,7 @@ void loop() {
         // send update to Teensy for all outputs
         SendMessageToTeensy(TeensyMessageID_BlinkerState,blinkerState++);
 
-        // Update DAC's for voume controls
+        // send volujme to can bus
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
     }
@@ -160,7 +160,7 @@ void loop() {
 Mask for filtering message ID's - 0x7F0
 
 Filter ID   range   Purpose
-0x000   ->  0x00F   Master timing broadcast including turn signal status
+0x000   ->  0x00F   Master timing broadcast including turn signal status and volume updates
 0x010   ->  0x01F   Color group Master
 0x020   ->  0x02F   Color group 1
 0x030   ->  0x03F   Color group 2
