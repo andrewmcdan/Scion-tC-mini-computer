@@ -4,7 +4,7 @@
 
 long unsigned int rxId;
 unsigned char len = 0;
-unsigned char rxBuf[8];
+unsigned char rxBuf[4];
 
 MCP_CAN CAN0(9);
 

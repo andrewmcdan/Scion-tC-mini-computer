@@ -161,6 +161,24 @@ Mask for filtering message ID's - 0x7F0
 
 Filter ID   range   Purpose
 0x000   ->  0x00F   Master timing broadcast including turn signal status and volume updates
+                    0x001 -  high resolution master timing
+                    0x002 -> 0x00e - turn signals, fog states, brake lights, etc 
+                    byte structure
+                    byte 0:
+                    0:1 - turn signal state
+                    2:3 - fog light state
+                    4:7 - brakes
+                    byte 1:
+                    byte 2:
+                    byte 3:
+                    
+                    0x00f - volume
+                    structure
+                    byte 0: Master Volume left
+                    byte 1: Master Volume right
+                    byte 2: Sub Vol left
+                    byte 3: Sub Vol right
+
 0x010   ->  0x01F   Color group Master
 0x020   ->  0x02F   Color group 1
 0x030   ->  0x03F   Color group 2
@@ -172,6 +190,9 @@ V           V         V
 0x300   ->  0x6FF   Not currently Used
 
 0x700   ->  0x7ff   Status updates
+                    0x700 - Left fog light
+                    0x701 - right fog light
+                    0x702 - volume controller
 Status updates will be perioducally transmitted by modules.
 The ID that they send it to will identify which module the
 message is being sent from. Status updates are transmitted
